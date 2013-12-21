@@ -130,12 +130,16 @@ void GL_DepthBoundsTest( const float zmin, const float zmax ) {
 		return;
 	}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( zmin == 0.0f && zmax == 0.0f ) {
 		glDisable( GL_DEPTH_BOUNDS_TEST_EXT );
 	} else {
 		glEnable( GL_DEPTH_BOUNDS_TEST_EXT );
 		glDepthBoundsEXT( zmin, zmax );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -230,7 +234,11 @@ may touch, including the editor.
 void GL_SetDefaultState() {
 	RENDERLOG_PRINTF( "--- GL_SetDefaultState ---\n" );
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glClearDepth( 1.0f );
+#else
+	glClearDepthf( 1.0f );
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// make sure our GL state vector is set correctly
 	memset( &backEnd.glState, 0, sizeof( backEnd.glState ) );
@@ -247,16 +255,24 @@ void GL_SetDefaultState() {
 	glDepthFunc( GL_LESS );
 	glDisable( GL_STENCIL_TEST );
 	glDisable( GL_POLYGON_OFFSET_FILL );
+#if !NGD_USE_OPENGL_ES_2_0
 	glDisable( GL_POLYGON_OFFSET_LINE );
 	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// These should never be changed
+#if !NGD_USE_OPENGL_ES_2_0
 	glShadeModel( GL_SMOOTH );
 	glEnable( GL_DEPTH_TEST );
 	glEnable( GL_BLEND );
 	glEnable( GL_SCISSOR_TEST );
 	glDrawBuffer( GL_BACK );
 	glReadBuffer( GL_BACK );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	if ( r_useScissor.GetBool() ) {
 		glScissor( 0, 0, renderSystem->GetWidth(), renderSystem->GetHeight() );
@@ -362,6 +378,7 @@ void GL_State( uint64 stateBits, bool forceGlState ) {
 	//
 	// fill/line mode
 	//
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( diff & GLS_POLYMODE_LINE ) {
 		if ( stateBits & GLS_POLYMODE_LINE ) {
 			glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -369,10 +386,14 @@ void GL_State( uint64 stateBits, bool forceGlState ) {
 			glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif
 
 	//
 	// polygon offset
 	//
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( diff & GLS_POLYGON_OFFSET ) {
 		if ( stateBits & GLS_POLYGON_OFFSET ) {
 			glPolygonOffset( backEnd.glState.polyOfsScale, backEnd.glState.polyOfsBias );
@@ -383,6 +404,9 @@ void GL_State( uint64 stateBits, bool forceGlState ) {
 			glDisable( GL_POLYGON_OFFSET_LINE );
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 #if !defined( USE_CORE_PROFILE )
 	//

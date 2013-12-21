@@ -450,12 +450,20 @@ void idImage::Bind() {
 	if ( opts.textureType == TT_2D ) {
 		if ( tmu->current2DMap != texnum ) {
 			tmu->current2DMap = texnum;
+#if !NGD_USE_OPENGL_ES_2_0
 			glBindMultiTextureEXT( GL_TEXTURE0 + texUnit, GL_TEXTURE_2D, texnum );
+#else
+			NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 		}
 	} else if ( opts.textureType == TT_CUBIC ) {
 		if ( tmu->currentCubeMap != texnum ) {
 			tmu->currentCubeMap = texnum;
+#if !NGD_USE_OPENGL_ES_2_0
 			glBindMultiTextureEXT( GL_TEXTURE0 + texUnit, GL_TEXTURE_CUBE_MAP_EXT, texnum );
+#else
+			NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 		}
 	}
 
@@ -481,13 +489,21 @@ CopyFramebuffer
 void idImage::CopyFramebuffer( int x, int y, int imageWidth, int imageHeight ) {
 
 
-	glBindTexture( ( opts.textureType == TT_CUBIC ) ? GL_TEXTURE_CUBE_MAP_EXT : GL_TEXTURE_2D, texnum );
+	glBindTexture( ( opts.textureType == TT_CUBIC ) ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, texnum );
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glReadBuffer( GL_BACK );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	opts.width = imageWidth;
 	opts.height = imageHeight;
+#if !NGD_USE_OPENGL_ES_2_0
 	glCopyTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, x, y, imageWidth, imageHeight, 0 );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// these shouldn't be necessary if the image was initialized properly
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
@@ -505,7 +521,7 @@ CopyDepthbuffer
 ====================
 */
 void idImage::CopyDepthbuffer( int x, int y, int imageWidth, int imageHeight ) {
-	glBindTexture( ( opts.textureType == TT_CUBIC ) ? GL_TEXTURE_CUBE_MAP_EXT : GL_TEXTURE_2D, texnum );
+	glBindTexture( ( opts.textureType == TT_CUBIC ) ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, texnum );
 
 	opts.width = imageWidth;
 	opts.height = imageHeight;
@@ -710,6 +726,6 @@ void idImage::SetSamplerState( textureFilter_t tf, textureRepeat_t tr ) {
 	}
 	filter = tf;
 	repeat = tr;
-	glBindTexture( ( opts.textureType == TT_CUBIC ) ? GL_TEXTURE_CUBE_MAP_EXT : GL_TEXTURE_2D, texnum );
+	glBindTexture( ( opts.textureType == TT_CUBIC ) ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D, texnum );
 	SetTexParameters();
 }

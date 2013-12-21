@@ -46,7 +46,10 @@ idCVar r_showSwapBuffers( "r_showSwapBuffers", "0", CVAR_BOOL, "Show timings fro
 idCVar r_syncEveryFrame( "r_syncEveryFrame", "1", CVAR_BOOL, "Don't let the GPU buffer execution past swapbuffers" ); 
 
 static int		swapIndex;		// 0 or 1 into renderSync
+
+#if !NGD_USE_OPENGL_ES_2_0
 static GLsync	renderSync[2];
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 void GLimp_SwapBuffers();
 void RB_SetMVP( const idRenderMatrix & mvp );
@@ -82,6 +85,7 @@ static void RB_DrawFlickerBox() {
 RB_SetBuffer
 =============
 */
+#if !NGD_USE_OPENGL_ES_2_0
 static void	RB_SetBuffer( const void *data ) {
 	// see which draw buffer we want to render the frame to
 
@@ -107,6 +111,7 @@ static void	RB_SetBuffer( const void *data ) {
 		}
 	}
 }
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 /*
 =============
@@ -136,6 +141,7 @@ const void GL_BlockingSwapBuffers() {
 		common->Printf( "%i msec to swapBuffers\n", beforeFence - beforeSwap );
 	}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( glConfig.syncAvailable ) {
 		swapIndex ^= 1;
 
@@ -166,6 +172,7 @@ const void GL_BlockingSwapBuffers() {
 			}
 		}
 	}
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	const int afterFence = Sys_Milliseconds();
 	if ( r_showSwapBuffers.GetBool() && afterFence - beforeFence > 1 ) {
@@ -187,6 +194,7 @@ const void GL_BlockingSwapBuffers() {
 R_MakeStereoRenderImage
 ====================
 */
+#if !NGD_USE_OPENGL_ES_2_0
 static void R_MakeStereoRenderImage( idImage *image ) {
 	idImageOpts	opts;
 	opts.width = renderSystem->GetWidth();
@@ -195,6 +203,7 @@ static void R_MakeStereoRenderImage( idImage *image ) {
 	opts.format = FMT_RGBA8;
 	image->AllocImage( opts, TF_LINEAR, TR_CLAMP );
 }
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 /*
 ====================
@@ -204,6 +213,7 @@ Renders the draw list twice, with slight modifications for left eye / right eye
 ====================
 */
 void RB_StereoRenderExecuteBackEndCommands( const emptyCommand_t * const allCmds ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	uint64 backEndStartTime = Sys_Microseconds();
 	
 	// If we are in a monoscopic context, this draws to the only buffer, and is
@@ -490,6 +500,7 @@ void RB_StereoRenderExecuteBackEndCommands( const emptyCommand_t * const allCmds
 	// stop rendering on this thread
 	uint64 backEndFinishTime = Sys_Microseconds();
 	backEnd.pc.totalMicroSec = backEndFinishTime - backEndStartTime;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -526,10 +537,12 @@ void RB_ExecuteBackEndCommands( const emptyCommand_t *cmds ) {
 	// needed for editor rendering
 	GL_SetDefaultState();
 
+#if !NGD_USE_OPENGL_ES_2_0
 	// If we have a stereo pixel format, this will draw to both
 	// the back left and back right buffers, which will have a
 	// performance penalty.
 	glDrawBuffer( GL_BACK );
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	for ( ; cmds != NULL; cmds = (const emptyCommand_t *)cmds->next ) {
 		switch ( cmds->commandId ) {

@@ -56,6 +56,7 @@ GLimp_TestSwapBuffers
 ========================
 */
 void GLimp_TestSwapBuffers( const idCmdArgs &args ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	idLib::Printf( "GLimp_TimeSwapBuffers\n" );
 	static const int MAX_FRAMES = 5;
 	uint64	timestamps[MAX_FRAMES];
@@ -84,6 +85,9 @@ void GLimp_TestSwapBuffers( const idCmdArgs &args ) {
 			idLib::Printf( "%i microseconds\n", (int)(timestamps[i] - timestamps[i-1]) );
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -241,7 +245,11 @@ GLW_GetWGLExtensionsWithFakeWindow
 ==================
 */
 void GLW_CheckWGLExtensions( HDC hDC ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	glewInit();
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif
 }
 
 /*
@@ -294,9 +302,10 @@ void GLW_WM_CREATE( HWND hWnd ) {
 CreateOpenGLContextOnDC
 ========================
 */
+#if !NGD_USE_OPENGL_ES_2_0
 static HGLRC CreateOpenGLContextOnDC( const HDC hdc, const bool debugContext ) {
-	int useOpenGL32 = r_useOpenGL32.GetInteger();
 	HGLRC m_hrc = NULL;
+	int useOpenGL32 = r_useOpenGL32.GetInteger();
 
 	for ( int i = 0; i < 2; i++ ) {
 		const int glMajorVersion = ( useOpenGL32 != 0 ) ? 3 : 2;
@@ -331,9 +340,9 @@ static HGLRC CreateOpenGLContextOnDC( const HDC hdc, const bool debugContext ) {
 			default: idLib::Printf( "unknown error: 0x%x\n", err ); break;
 		}
 	}
-
 	return m_hrc;
 }
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 /*
 ====================
@@ -343,6 +352,7 @@ Returns -1 on failure, or a pixel format
 ====================
 */
 static int GLW_ChoosePixelFormat( const HDC hdc, const int multisamples, const bool stereo3D ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	FLOAT	fAttributes[] = { 0, 0 };
 	int		iAttributes[] = {
 		WGL_SAMPLE_BUFFERS_ARB, ( ( multisamples > 1 ) ? 1 : 0 ),
@@ -357,13 +367,18 @@ static int GLW_ChoosePixelFormat( const HDC hdc, const int multisamples, const b
 		WGL_STEREO_ARB, ( stereo3D ? TRUE : FALSE ),
 		0, 0
 	};
+#endif
 
-	int	pixelFormat;
-	UINT numFormats;
+	int	pixelFormat = -1;
 
+#if !NGD_USE_OPENGL_ES_2_0
+	UINT numFormats = -1;
 	if ( !wglChoosePixelFormatARB( hdc, iAttributes, fAttributes, 1, &pixelFormat, &numFormats ) ) {
 		return -1;
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	return pixelFormat;
 }
 
@@ -377,6 +392,7 @@ shown, and create the rendering context
 ====================
 */
 static bool GLW_InitDriver( glimpParms_t parms ) {
+#if !NGD_USE_OPENGL_ES_2_0
     PIXELFORMATDESCRIPTOR src = 
 	{
 		sizeof(PIXELFORMATDESCRIPTOR),	// size of this pfd
@@ -476,7 +492,9 @@ static bool GLW_InitDriver( glimpParms_t parms ) {
 		return false;
 	}
 	common->Printf( "succeeded\n" );
-
+#else
+	NGD_MISSING_FUNCTIONALITY
+#endif // !NGD_USE_OPENGL_ES_2_0
 	return true;
 }
 
@@ -1302,9 +1320,13 @@ void GLimp_SwapBuffers() {
 			interval = 1;
 		}
 
+#if !NGD_USE_OPENGL_ES_2_0
 		if ( wglSwapIntervalEXT ) {
 			wglSwapIntervalEXT( interval );
 		}
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	}
 
 	::SwapBuffers( win32.hDC );
@@ -1499,6 +1521,7 @@ GLimp_ExtensionPointer
 Returns a function pointer for an OpenGL extension entry point
 ===================
 */
+#if !NGD_USE_OPENGL_ES_2_0
 GLExtension_t GLimp_ExtensionPointer( const char *name ) {
 	void	(*proc)();
 
@@ -1510,3 +1533,4 @@ GLExtension_t GLimp_ExtensionPointer( const char *name ) {
 
 	return proc;
 }
+#endif // !NGD_USE_OPENGL_ES_2_0

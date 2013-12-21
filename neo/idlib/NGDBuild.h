@@ -46,6 +46,13 @@ If you have questions concerning this license or the applicable additional terms
 /**
  * Use OpenGL ES 2.0.
  */
-#define NGD_USE_OPENGL_ES_2_0			0
+#define NGD_USE_OPENGL_ES_2_0			1
+
+
+
+/**
+ * Missing functionality define.
+ */
+#define NGD_MISSING_FUNCTIONALITY		assert(0)
 
 #endif // __NGDBUILD_H__

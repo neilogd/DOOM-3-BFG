@@ -92,6 +92,7 @@ void RB_DrawBounds( const idBounds &bounds ) {
 	if ( bounds.IsCleared() ) {
 		return;
 	}
+#if !NGD_USE_OPENGL_ES_2_0
 	glBegin( GL_LINE_LOOP );
 	glVertex3f( bounds[0][0], bounds[0][1], bounds[0][2] );
 	glVertex3f( bounds[0][0], bounds[1][1], bounds[0][2] );
@@ -118,6 +119,9 @@ void RB_DrawBounds( const idBounds &bounds ) {
 	glVertex3f( bounds[1][0], bounds[1][1], bounds[0][2] );
 	glVertex3f( bounds[1][0], bounds[1][1], bounds[1][2] );
 	glEnd();
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 
@@ -127,6 +131,7 @@ RB_SimpleSurfaceSetup
 ================
 */
 static void RB_SimpleSurfaceSetup( const drawSurf_t *drawSurf ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	// change the matrix if needed
 	if ( drawSurf->space != backEnd.currentSpace ) {
 		glLoadMatrixf( drawSurf->space->modelViewMatrix );
@@ -141,6 +146,9 @@ static void RB_SimpleSurfaceSetup( const drawSurf_t *drawSurf ) {
 					drawSurf->scissorRect.y2 + 1 - drawSurf->scissorRect.y1 );
 		backEnd.currentScissor = drawSurf->scissorRect;
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -149,6 +157,7 @@ RB_SimpleWorldSetup
 ================
 */
 static void RB_SimpleWorldSetup() {
+#if !NGD_USE_OPENGL_ES_2_0
 	backEnd.currentSpace = &backEnd.viewDef->worldSpace;
 
 
@@ -159,6 +168,9 @@ static void RB_SimpleWorldSetup() {
 				backEnd.viewDef->scissor.x2 + 1 - backEnd.viewDef->scissor.x1,
 				backEnd.viewDef->scissor.y2 + 1 - backEnd.viewDef->scissor.y1 );
 	backEnd.currentScissor = backEnd.viewDef->scissor;
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -172,6 +184,7 @@ stenciling will matter.
 =================
 */
 void RB_PolygonClear() {
+#if !NGD_USE_OPENGL_ES_2_0
 	glPushMatrix();
 	glPushAttrib( GL_ALL_ATTRIB_BITS  );
 	glLoadIdentity();
@@ -187,6 +200,9 @@ void RB_PolygonClear() {
 	glEnd();
 	glPopAttrib();
 	glPopMatrix();
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -415,6 +431,7 @@ static void RB_ShowIntensity() {
 	}
 
 	// draw it back to the screen
+#if !NGD_USE_OPENGL_ES_2_0
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	GL_State( GLS_DEPTHFUNC_ALWAYS );
@@ -428,6 +445,9 @@ static void RB_ShowIntensity() {
 	glMatrixMode( GL_MODELVIEW );
 
 	glDrawPixels( renderSystem->GetWidth(), renderSystem->GetHeight(), GL_RGBA , GL_UNSIGNED_BYTE, colorReadback );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif
 
 	R_StaticFree( colorReadback );
 }
@@ -441,6 +461,7 @@ Draw the depth buffer as colors
 ===================
 */
 static void RB_ShowDepthBuffer() {
+#if !NGD_USE_OPENGL_ES_2_0
 	void	*depthReadback;
 
 	if ( !r_showDepth.GetBool() ) {
@@ -478,6 +499,9 @@ static void RB_ShowDepthBuffer() {
 
 	glDrawPixels( renderSystem->GetWidth(), renderSystem->GetHeight(), GL_RGBA , GL_UNSIGNED_BYTE, depthReadback );
 	R_StaticFree( depthReadback );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -559,9 +583,13 @@ static void RB_EnterWeaponDepthHack() {
 	matrix[10] *= modelDepthHack;
 	matrix[14] *= modelDepthHack;
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glMatrixMode( GL_PROJECTION );
 	glLoadMatrixf( matrix );
 	glMatrixMode( GL_MODELVIEW );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -576,9 +604,13 @@ static void RB_EnterModelDepthHack( float depth ) {
 
 	matrix[14] -= depth;
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glMatrixMode( GL_PROJECTION );
 	glLoadMatrixf( matrix );
 	glMatrixMode( GL_MODELVIEW );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -587,9 +619,13 @@ RB_LeaveDepthHack
 ===============
 */
 static void RB_LeaveDepthHack() {
+#if !NGD_USE_OPENGL_ES_2_0
 	glMatrixMode( GL_PROJECTION );
 	glLoadMatrixf( backEnd.viewDef->projectionMatrix );
 	glMatrixMode( GL_MODELVIEW );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -600,7 +636,11 @@ does a glLoadMatrixf after optionally applying the low-latency bypass matrix
 =============
 */
 static void RB_LoadMatrixWithBypass( const float m[16] ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	glLoadMatrixf( m );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -721,6 +761,7 @@ static void RB_ShowSilhouette() {
 					continue;
 				}
 
+#if !NGD_USE_OPENGL_ES_2_0
 				glBindBuffer( GL_ARRAY_BUFFER, (GLuint)vertexBuffer.GetAPIObject() );
 				int vertOffset = vertexBuffer.GetOffset();
 
@@ -743,6 +784,9 @@ static void RB_ShowSilhouette() {
 					}
 				}
 				glEnd();
+#else
+				NGD_MISSING_FUNCTIONALITY;
+#endif
 
 			}
 		}
@@ -880,7 +924,11 @@ static void RB_ShowViewEntitys( viewEntity_t *vModels ) {
 	for ( const viewEntity_t * vModel = vModels; vModel; vModel = vModel->next ) {
 		idBounds	b;
 
+#if !NGD_USE_OPENGL_ES_2_0
 		glLoadMatrixf( vModel->modelViewMatrix );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 		const idRenderEntityLocal * edef = vModel->entityDef;
 		if ( !edef ) {
@@ -937,6 +985,7 @@ green if they have a negative texture area, or blue if degenerate area
 =====================
 */
 static void RB_ShowTexturePolarity( drawSurf_t **drawSurfs, int numDrawSurfs ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int		i, j;
 	drawSurf_t	*drawSurf;
 	const srfTriangles_t	*tri;
@@ -996,6 +1045,9 @@ static void RB_ShowTexturePolarity( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 	}
 
 	GL_State( GLS_DEFAULT );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1006,6 +1058,7 @@ Shade materials that are using unsmoothed tangents
 =====================
 */
 static void RB_ShowUnsmoothedTangents( drawSurf_t **drawSurfs, int numDrawSurfs ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int		i, j;
 	drawSurf_t	*drawSurf;
 	const srfTriangles_t	*tri;
@@ -1045,6 +1098,9 @@ static void RB_ShowUnsmoothedTangents( drawSurf_t **drawSurfs, int numDrawSurfs 
 	}
 
 	GL_State( GLS_DEFAULT );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1058,6 +1114,7 @@ Shade a triangle by the RGB colors of its tangent space
 =====================
 */
 static void RB_ShowTangentSpace( drawSurf_t **drawSurfs, int numDrawSurfs ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int		i, j;
 	drawSurf_t	*drawSurf;
 	const srfTriangles_t	*tri;
@@ -1103,6 +1160,9 @@ static void RB_ShowTangentSpace( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 	}
 
 	GL_State( GLS_DEFAULT );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif
 }
 
 /*
@@ -1113,6 +1173,7 @@ Draw each triangle with the solid vertex colors
 =====================
 */
 static void RB_ShowVertexColor( drawSurf_t **drawSurfs, int numDrawSurfs ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int		i, j;
 	drawSurf_t	*drawSurf;
 	const srfTriangles_t	*tri;
@@ -1133,6 +1194,7 @@ static void RB_ShowVertexColor( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 		if ( !tri->verts ) {
 			continue;
 		}
+
 		glBegin( GL_TRIANGLES );
 		for ( j = 0; j < tri->numIndexes; j++ ) {
 			const idDrawVert *v;
@@ -1145,6 +1207,9 @@ static void RB_ShowVertexColor( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 	}
 
 	GL_State( GLS_DEFAULT );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1193,6 +1258,7 @@ static void RB_ShowNormals( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 			continue;
 		}
 
+#if !NGD_USE_OPENGL_ES_2_0
 		glBegin( GL_LINES );
 		for ( j = 0; j < tri->numVerts; j++ ) {
 			const idVec3 normal = tri->verts[j].GetNormal();
@@ -1214,6 +1280,9 @@ static void RB_ShowNormals( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 			glVertex3fv( end.ToFloatPtr() );
 		}
 		glEnd();
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	}
 
 	if ( showNumbers ) {
@@ -1337,6 +1406,7 @@ static void RB_ShowTextureVectors( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 		RB_SimpleSurfaceSetup( drawSurf );
 
 		// draw non-shared edges in yellow
+#if !NGD_USE_OPENGL_ES_2_0
 		glBegin( GL_LINES );
 
 		for ( int j = 0; j < tri->numIndexes; j+= 3 ) {
@@ -1402,6 +1472,9 @@ static void RB_ShowTextureVectors( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 		}
 
 		glEnd();
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	}
 }
 
@@ -1413,6 +1486,7 @@ Draw lines from each vertex to the dominant triangle center
 =====================
 */
 static void RB_ShowDominantTris( drawSurf_t **drawSurfs, int numDrawSurfs ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int			i, j;
 	drawSurf_t	*drawSurf;
 	const srfTriangles_t	*tri;
@@ -1463,6 +1537,9 @@ static void RB_ShowDominantTris( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 		glEnd();
 	}
 	glDisable( GL_POLYGON_OFFSET_LINE );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1473,6 +1550,7 @@ Debugging tool
 =====================
 */
 static void RB_ShowEdges( drawSurf_t **drawSurfs, int numDrawSurfs ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int			i, j, k, m, n, o;
 	drawSurf_t	*drawSurf;
 	const srfTriangles_t	*tri;
@@ -1558,6 +1636,9 @@ static void RB_ShowEdges( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 		}
 		glEnd();
 	}
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1577,6 +1658,7 @@ static void RB_ShowLights() {
 
 	GL_State( GLS_DEFAULT );
 
+#if !NGD_USE_OPENGL_ES_2_0
 	// we use the 'vLight->invProjectMVPMatrix'
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity(); 
@@ -1623,6 +1705,7 @@ static void RB_ShowLights() {
 	glLoadMatrixf( backEnd.viewDef->projectionMatrix );
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1758,6 +1841,7 @@ static void RB_DrawText( const char *text, const idVec3 &origin, float scale, co
 
 
 
+#if !NGD_USE_OPENGL_ES_2_0
 	int i, j, len, num, index, charIndex, line;
 	float textLen = 1.0f, spacing = 1.0f;
 	idVec3 org, p1, p2;
@@ -1824,6 +1908,9 @@ static void RB_DrawText( const char *text, const idVec3 &origin, float scale, co
 
 		glEnd();
 	}
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -1938,6 +2025,7 @@ RB_ShowDebugLines
 ================
 */
 void RB_ShowDebugLines() {
+#if !NGD_USE_OPENGL_ES_2_0
 	int			i;
 	int			width;
 	debugLine_t	*line;
@@ -1998,6 +2086,9 @@ void RB_ShowDebugLines() {
 
 	glLineWidth( 1 );
 	GL_State( GLS_DEFAULT );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -2055,6 +2146,7 @@ RB_ShowDebugPolygons
 ================
 */
 void RB_ShowDebugPolygons() {
+#if !NGD_USE_OPENGL_ES_2_0
 	int				i, j;
 	debugPolygon_t	*poly;
 
@@ -2066,7 +2158,6 @@ void RB_ShowDebugPolygons() {
 	RB_SimpleWorldSetup();
 
 	globalImages->BindNull();
-
 	glDisable( GL_TEXTURE_2D );
 
 	if ( r_debugPolygonFilled.GetBool() ) {
@@ -2083,6 +2174,7 @@ void RB_ShowDebugPolygons() {
 
 			glColor4fv( poly->rgb.ToFloatPtr() );
 
+
 			glBegin( GL_POLYGON );
 
 			for ( j = 0; j < poly->winding.GetNumPoints(); j++) {
@@ -2090,6 +2182,7 @@ void RB_ShowDebugPolygons() {
 			}
 
 			glEnd();
+
 //		}
 	}
 
@@ -2100,6 +2193,9 @@ void RB_ShowDebugPolygons() {
 	} else {
 		glDisable( GL_POLYGON_OFFSET_LINE );
 	}
+#else
+			NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	GL_State( GLS_DEFAULT );
 }
@@ -2246,6 +2342,7 @@ void RB_TestGamma() {
 		}
 	}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glLoadIdentity();
 
 	glMatrixMode( GL_PROJECTION );
@@ -2260,6 +2357,9 @@ void RB_TestGamma() {
 	glPopMatrix();
 	glEnable( GL_TEXTURE_2D );
 	glMatrixMode( GL_MODELVIEW );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 
@@ -2294,8 +2394,10 @@ static void RB_TestGammaBias() {
 				}
 			}
 		}
-	}
+	
+}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	GL_State( GLS_DEPTHFUNC_ALWAYS );
@@ -2309,6 +2411,9 @@ static void RB_TestGammaBias() {
 	glPopMatrix();
 	glEnable( GL_TEXTURE_2D );
 	glMatrixMode( GL_MODELVIEW );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -2394,10 +2499,14 @@ void RB_TestImage() {
 	float projMatrixTranspose[16];
 	R_MatrixTranspose( finalOrtho, projMatrixTranspose );
 	renderProgManager.SetRenderParms( RENDERPARM_MVPMATRIX_X, projMatrixTranspose, 4 );
+#if !NGD_USE_OPENGL_ES_2_0
 	glMatrixMode( GL_PROJECTION );
 	glLoadMatrixf( finalOrtho );
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// Set Color
 	GL_Color( 1, 1, 1, 1 );
@@ -2428,6 +2537,7 @@ RB_DrawExpandedTriangles
 =================
 */
 void RB_DrawExpandedTriangles( const srfTriangles_t *tri, const float radius, const idVec3 &vieworg ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	int i, j, k;
 	idVec3 dir[6], normal, point;
 
@@ -2485,6 +2595,9 @@ void RB_DrawExpandedTriangles( const srfTriangles_t *tri, const float radius, co
 
 		glEnd();
 	}
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -2540,6 +2653,7 @@ void RB_ShowTrace( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 			continue;
 		}
 
+#if !NGD_USE_OPENGL_ES_2_0
 		glLoadMatrixf( surf->space->modelViewMatrix );
 
 		// highlight the surface
@@ -2566,6 +2680,9 @@ void RB_ShowTrace( drawSurf_t **drawSurfs, int numDrawSurfs ) {
 			GL_Color( 1, 1, 1, 1 );
 			RB_DrawBounds( idBounds( hit.point ).Expand( 1 ) );
 		}
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	}
 }
 
