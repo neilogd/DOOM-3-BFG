@@ -43,5 +43,9 @@ If you have questions concerning this license or the applicable additional terms
  */
 #define NGD_USE_XAUDIO2					0
 
+/**
+ * Use OpenGL ES 2.0.
+ */
+#define NGD_USE_OPENGL_ES_2_0			0
 
 #endif // __NGDBUILD_H__

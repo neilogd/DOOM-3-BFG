@@ -184,7 +184,7 @@ public:
 		STATE_CREATING			= 2,		// In the process of creating the lobby as a host
 		STATE_SEARCHING			= 3,		// In the process of searching for a lobby to join
 		STATE_OBTAINING_ADDRESS	= 4,		// In the process of obtaining the address of the lobby owner
-		STATE_ARBITRATING		= 5,		// Arbitrating
+		STATEITRATING		= 5,		// Arbitrating
 		STATE_SHUTTING_DOWN		= 6,		// In the process of shutting down
 		STATE_SHUTDOWN			= 7,		// Was a host or peer at one point, now ready to be deleted
 		STATE_FAILED			= 8,		// Failure occurred
@@ -198,7 +198,7 @@ public:
 			"STATE_CREATING",
 			"STATE_SEARCHING",
 			"STATE_OBTAINING_ADDRESS",
-			"STATE_ARBITRATING",
+			"STATEITRATING",
 			"STATE_SHUTTING_DOWN",
 			"STATE_SHUTDOWN",
 			"STATE_FAILED"

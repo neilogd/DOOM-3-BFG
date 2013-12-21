@@ -126,8 +126,8 @@ public:
 		
 		RELIABLE_BANDWIDTH_VALUES,				// peer to host: data back about bandwidth test
 
-		RELIABLE_ARBITRATE,						// host to peer : start arbitration
-		RELIABLE_ARBITRATE_OK,					// peer to host : ack arbitration request
+		RELIABLEITRATE,						// host to peer : start arbitration
+		RELIABLEITRATE_OK,					// peer to host : ack arbitration request
 
 		RELIABLE_POST_STATS,					// host to peer : here, write these stats now (hacky)
 

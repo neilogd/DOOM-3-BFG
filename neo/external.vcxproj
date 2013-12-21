@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\glew-1.10.0\src\glew.c" />
     <ClCompile Include="framework\zlib\adler32.c" />
     <ClCompile Include="framework\zlib\compress.c" />
     <ClCompile Include="framework\zlib\crc32.c" />
@@ -73,6 +74,9 @@
     <ClCompile Include="renderer\jpeg-6\jutils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\external\glew-1.10.0\include\GL\glew.h" />
+    <ClInclude Include="..\external\glew-1.10.0\include\GL\glxew.h" />
+    <ClInclude Include="..\external\glew-1.10.0\include\GL\wglew.h" />
     <ClInclude Include="renderer\jpeg-6\jchuff.h" />
     <ClInclude Include="renderer\jpeg-6\jconfig.h" />
     <ClInclude Include="renderer\jpeg-6\jdct.h" />
@@ -148,7 +152,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../external/glew-1.10.0/include;$(SolutionDir)renderer\jpeg-6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,7 +168,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../external/glew-1.10.0/include;$(SolutionDir)renderer\jpeg-6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,7 +186,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../external/glew-1.10.0/include;$(SolutionDir)renderer\jpeg-6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

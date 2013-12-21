@@ -7,6 +7,9 @@
     <Filter Include="zlib">
       <UniqueIdentifier>{2d5b407e-8075-4eda-b4d1-1327db0580c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="glew">
+      <UniqueIdentifier>{e07e459a-47ca-4cb2-8f75-8994bc506f76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer\jpeg-6\jcapimin.cpp">
@@ -177,6 +180,9 @@
     <ClCompile Include="framework\zlib\zutil.c">
       <Filter>zlib</Filter>
     </ClCompile>
+    <ClCompile Include="..\external\glew-1.10.0\src\glew.c">
+      <Filter>glew</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\jpeg-6\jchuff.h">
@@ -211,6 +217,15 @@
     </ClInclude>
     <ClInclude Include="renderer\jpeg-6\jversion.h">
       <Filter>jpeg-6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\glew-1.10.0\include\GL\glew.h">
+      <Filter>glew</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\glew-1.10.0\include\GL\glxew.h">
+      <Filter>glew</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\glew-1.10.0\include\GL\wglew.h">
+      <Filter>glew</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

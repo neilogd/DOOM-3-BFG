@@ -175,19 +175,19 @@ void idRenderProgManager::KillAllShaders() {
 	Unbind();
 	for ( int i = 0; i < vertexShaders.Num(); i++ ) {
 		if ( vertexShaders[i].progId != INVALID_PROGID ) {
-			qglDeleteShader( vertexShaders[i].progId );
+			glDeleteShader( vertexShaders[i].progId );
 			vertexShaders[i].progId = INVALID_PROGID;
 		}
 	}
 	for ( int i = 0; i < fragmentShaders.Num(); i++ ) {
 		if ( fragmentShaders[i].progId != INVALID_PROGID ) {
-			qglDeleteShader( fragmentShaders[i].progId );
+			glDeleteShader( fragmentShaders[i].progId );
 			fragmentShaders[i].progId = INVALID_PROGID;
 		}
 	}
 	for ( int i = 0; i < glslPrograms.Num(); ++i ) {
 		if ( glslPrograms[i].progId != INVALID_PROGID ) {
-			qglDeleteProgram( glslPrograms[i].progId );
+			glDeleteProgram( glslPrograms[i].progId );
 			glslPrograms[i].progId = INVALID_PROGID;
 		}
 	}
@@ -285,7 +285,8 @@ idRenderProgManager::LoadShader
 ================================================================================================
 */
 GLuint idRenderProgManager::LoadShader( GLenum target, const char * name, const char * startToken ) {
-
+	assert(0);
+#if 0
 	idStr fullPath = "renderprogs\\gl\\";
 	fullPath += name;
 
@@ -356,6 +357,8 @@ GLuint idRenderProgManager::LoadShader( GLenum target, const char * name, const 
 	common->Printf( "\n" );
 	fileSystem->FreeFile( fileBuffer );
 	return progId;
+#endif
+	return 0;
 }
 
 /*
@@ -373,7 +376,7 @@ void idRenderProgManager::BindShader( int vIndex, int fIndex ) {
 	if ( vIndex >= 0 && vIndex < glslPrograms.Num() ) {
 		currentRenderProgram = vIndex;
 		RENDERLOG_PRINTF( "Binding GLSL Program %s\n", glslPrograms[vIndex].name.c_str() );
-		qglUseProgram( glslPrograms[vIndex].progId );
+		glUseProgram( glslPrograms[vIndex].progId );
 	}
 }
 
@@ -386,7 +389,7 @@ void idRenderProgManager::Unbind() {
 	currentVertexShader = -1;
 	currentFragmentShader = -1;
 
-	qglUseProgram( 0 );
+	glUseProgram( 0 );
 }
 
 /*

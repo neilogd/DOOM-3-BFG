@@ -2549,13 +2549,13 @@ void idLobby::HandleReliableMsg( int p, idBitMsg & msg ) {
 		SendMatchParmsToPeers();
 
 		startLoadingFromHost = true;		// Hijack this flag
-	} else if ( reliableType == RELIABLE_ARBITRATE ) {
-		VERIFY_CONNECTED_PEER( p, TYPE_GAME, RELIABLE_ARBITRATE );
+	} else if ( reliableType == RELIABLEITRATE ) {
+		VERIFY_CONNECTED_PEER( p, TYPE_GAME, RELIABLEITRATE );
 		// Host telling us to arbitrate
 		// Set a flag to do this later, since the lobby may not be in a state where it can fulfil the request at the moment
 		respondToArbitrate = true;
-	} else if ( reliableType == RELIABLE_ARBITRATE_OK ) {
-		VERIFY_CONNECTED_PEER( p, TYPE_GAME, RELIABLE_ARBITRATE_OK );
+	} else if ( reliableType == RELIABLEITRATE_OK ) {
+		VERIFY_CONNECTED_PEER( p, TYPE_GAME, RELIABLEITRATE_OK );
 		
 		NET_VERBOSE_PRINT( "NET: Got an arbitration ok from %d\n", p );
 

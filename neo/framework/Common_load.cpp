@@ -585,7 +585,11 @@ void idCommonLocal::ExecuteMapChange() {
 		// In single player, run a bunch of frames to make sure ragdolls are settled
 		idUserCmdMgr emptyCommandManager;
 		gameReturn_t emptyGameReturn;
+#ifdef _DEBUG
+		for ( int i = 0; i < 1; i++ ) {
+#else 
 		for ( int i = 0; i < 100; i++ ) {
+#endif 
 			for ( int playerIndex = 0; playerIndex < MAX_PLAYERS; ++playerIndex ) {
 				emptyCommandManager.PutUserCmdForPlayer( playerIndex, usercmd_t() );
 			}
