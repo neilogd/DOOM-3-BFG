@@ -312,8 +312,10 @@ public:
 	virtual void			InitStreamBuffers() = 0;
 	virtual void			FreeStreamBuffers() = 0;
 
+#if NGD_USE_XAUDIO2
 	// video playback needs to get this
 	virtual void *			GetIXAudio2() const = 0;
+#endif // NGD_USE_XAUDIO2
 
 	// for the sound level meter window
 	virtual cinData_t		ImageForTime( const int milliseconds, const bool waveform ) = 0;

@@ -84,6 +84,7 @@ typedef enum {
 
 #include <dxsdkver.h>
 
+#if NGD_USE_XAUDIO2
 #include <xaudio2.h>
 #include <xaudio2fx.h>
 #include <X3DAudio.h>
@@ -91,6 +92,9 @@ typedef enum {
 #include "XAudio2/XA2_SoundSample.h"
 #include "XAudio2/XA2_SoundVoice.h"
 #include "XAudio2/XA2_SoundHardware.h"
+#else
+#include "Dummy/snd_dummy.h"
+#endif // NGD_USE_XAUDIO2
 
 
 
@@ -396,7 +400,9 @@ public:
 	virtual void			InitStreamBuffers();
 	virtual void			FreeStreamBuffers();
 
+#if NGD_USE_XAUDIO2
 	virtual void *			GetIXAudio2() const;
+#endif // NGD_USE_XAUDIO2
 
 	// for the sound level meter window
 	virtual cinData_t		ImageForTime( const int milliseconds, const bool waveform );
@@ -432,12 +438,16 @@ public:
 
 	struct bufferContext_t {
 		bufferContext_t() :
+#if NGD_USE_XAUDIO2
 			voice( NULL ),
 			sample( NULL ),
+#endif // NGD_USE_XAUDIO2
 			bufferNumber( 0 )
 		{ }
+#if NGD_USE_XAUDIO2
 		idSoundVoice_XAudio2 *	voice;
 		idSoundSample_XAudio2 * sample;
+#endif // NGD_USE_XAUDIO2
 		int bufferNumber;
 	};
 

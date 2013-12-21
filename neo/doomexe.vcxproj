@@ -32,16 +32,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Retail|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -219,6 +222,7 @@
     <ClInclude Include="renderer\simplex.h" />
     <ClInclude Include="renderer\tr_local.h" />
     <ClInclude Include="renderer\VertexCache.h" />
+    <ClInclude Include="sound\Dummy\snd_dummy.h" />
     <ClInclude Include="sound\snd_local.h" />
     <ClInclude Include="sound\sound.h" />
     <ClInclude Include="swf\SWF.h" />
@@ -254,16 +258,12 @@
     <ClInclude Include="sys\sys_signin.h" />
     <ClInclude Include="sound\SoundVoice.h" />
     <ClInclude Include="sound\WaveFile.h" />
-    <ClInclude Include="sound\XAudio2\XA2_SoundHardware.h" />
-    <ClInclude Include="sound\XAudio2\XA2_SoundSample.h" />
-    <ClInclude Include="sound\XAudio2\XA2_SoundVoice.h" />
     <ClInclude Include="sys\sys_stats.h" />
     <ClInclude Include="sys\sys_stats_misc.h" />
     <ClInclude Include="sys\sys_voicechat.h" />
     <ClInclude Include="sys\win32\win_input.h" />
     <ClInclude Include="sys\win32\win_achievements.h" />
     <ClInclude Include="sys\win32\win_local.h" />
-    <ClInclude Include="sys\win32\rc\doom_resource.h" />
     <ClInclude Include="sys\win32\win_localuser.h" />
     <ClInclude Include="sys\win32\win_signin.h" />
     <ClInclude Include="ui\BindWindow.h" />
@@ -470,9 +470,6 @@
     <ClCompile Include="sys\sys_signin.cpp" />
     <ClCompile Include="sound\SoundVoice.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
-    <ClCompile Include="sound\XAudio2\XA2_SoundHardware.cpp" />
-    <ClCompile Include="sound\XAudio2\XA2_SoundSample.cpp" />
-    <ClCompile Include="sound\XAudio2\XA2_SoundVoice.cpp" />
     <ClCompile Include="sys\sys_voicechat.cpp" />
     <ClCompile Include="sys\win32\win_achievements.cpp" />
     <ClCompile Include="sys\win32\win_cpu.cpp" />
@@ -510,29 +507,6 @@
     <ClCompile Include="ui\Winvar.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="sys\win32\rc\res\doom.ico" />
-    <None Include="sys\win32\rc\res\doom3bfg.bin" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="sys\win32\rc\doom.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\doomclassic\doomclassic.vcxproj" Condition="'$(Platform)'=='Win32'">
-      <Project>{d87adc61-3968-4a89-824f-01365ab6bd88}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
-    <ProjectReference Include="..\doomclassic\timidity\timidity.vcxproj" Condition="'$(Platform)'=='Win32'">
-      <Project>{3267f0ed-fe57-4348-91d7-aa8a4976750f}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
     <ProjectReference Include="external.vcxproj">
       <Project>{b679fda2-cb76-4348-906b-4caa294195fd}</Project>
     </ProjectReference>

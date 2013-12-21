@@ -158,4 +158,9 @@ const int MAX_EXPRESSION_REGISTERS = 4096;
 #undef max
 #include <algorithm>	// for min / max / swap
 
+//-----------------------------------------------------
+
+#include "NGDBuild.h"
+
+
 #endif /* !__PRECOMPILED_H__ */

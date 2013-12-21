@@ -41,7 +41,10 @@ If you have questions concerning this license or the applicable additional terms
 #undef StrCmpN
 #undef StrCmpNI
 #undef StrCmpI
+
+#if !NGD_STRIP_ATL_CODE
 #include <atlbase.h>
+#endif // !NGD_STRIP_ATL_CODE
 
 #include <comdef.h>
 #include <comutil.h>
@@ -139,6 +142,7 @@ returns in megabytes
 int Sys_GetVideoRam() {
 	unsigned int retSize = 64;
 
+#if !NGD_STRIP_ATL_CODE
 	CComPtr<IWbemLocator> spLoc = NULL;
 	HRESULT hr = CoCreateInstance( CLSID_WbemLocator, 0, CLSCTX_SERVER, IID_IWbemLocator, ( LPVOID * ) &spLoc );
 	if ( hr != S_OK || spLoc == NULL ) {
@@ -182,6 +186,7 @@ int Sys_GetVideoRam() {
 			}
 		}
 	}
+#endif // !NGD_STRIP_ATL_CODE
 	return retSize;
 }
 

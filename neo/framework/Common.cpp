@@ -36,9 +36,12 @@ If you have questions concerning this license or the applicable additional terms
 
 #include "../sound/sound.h"
 
+#if !NGD_STRIP_DOOMLIB
 #include "../../doomclassic/doom/doomlib.h"
 #include "../../doomclassic/doom/d_event.h"
 #include "../../doomclassic/doom/d_main.h"
+#endif // !NGD_STRIP_DOOMLIB
+
 
 
 
@@ -117,8 +120,10 @@ idCommonLocal::idCommonLocal() :
 	lastPacifierDialogState( false ),
 	showShellRequested( false ),
 	currentGame( DOOM3_BFG ),
-	idealCurrentGame( DOOM3_BFG ),
-	doomClassicMaterial( NULL )
+	idealCurrentGame( DOOM3_BFG )
+#if !NGD_STRIP_DOOMLIB
+	,doomClassicMaterial( NULL )
+#endif // !NGD_STRIP_DOOMLIB
 	{
 
 	snapCurrent.localTime = -1;
@@ -1522,6 +1527,7 @@ bool idCommonLocal::ProcessEvent( const sysEvent_t *event ) {
 		return true;
 	}
 
+#if !NGD_STRIP_DOOMLIB
 	// Let Doom classic run events.
 	if ( IsPlayingDoomClassic() ) {
 		// Translate the event to Doom classic format.
@@ -1533,6 +1539,7 @@ bool idCommonLocal::ProcessEvent( const sysEvent_t *event ) {
 			} else if( event->evValue2 == 0 ) {
 				classicEvent.type = ev_keyup;
 			}
+
 
 			DoomLib::SetPlayer( 0 );
 			
@@ -1548,7 +1555,7 @@ bool idCommonLocal::ProcessEvent( const sysEvent_t *event ) {
 		// Let the classics eat all events.
 		return true;
 	}
-
+#endif // !NGD_STRIP_DOOMLIB
 	// menus / etc
 	if ( MenuEvent( event ) ) {
 		return true;
@@ -1604,6 +1611,7 @@ void idCommonLocal::PerformGameSwitch() {
 		return;
 	}
 
+#if !NGD_STRIP_DOOMLIB
 	const int DOOM_CLASSIC_HZ = 35;
 
 	if ( idealCurrentGame == DOOM_CLASSIC || idealCurrentGame == DOOM2_CLASSIC ) {
@@ -1632,6 +1640,7 @@ void idCommonLocal::PerformGameSwitch() {
 		
 	} else if ( idealCurrentGame == DOOM3_BFG ) {
 		DoomLib::Interface.Shutdown();
+#endif // !NGD_STRIP_DOOMLIB
 		com_engineHz_denominator = 100LL * com_engineHz.GetFloat();
 		com_engineHz_latched = com_engineHz.GetFloat();
 		
@@ -1645,7 +1654,9 @@ void idCommonLocal::PerformGameSwitch() {
 		if ( menuSoundWorld != NULL ) {
 			menuSoundWorld->UnPause();
 		}
+#if !NGD_STRIP_DOOMLIB
 	}
+#endif // !NGD_STRIP_DOOMLIB
 
 	currentGame = idealCurrentGame;
 }

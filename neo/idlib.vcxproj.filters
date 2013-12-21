@@ -393,5 +393,6 @@
     <ClInclude Include="idlib\geometry\DrawVert_intrinsics.h">
       <Filter>Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="idlib\NGDBuild.h" />
   </ItemGroup>
 </Project>

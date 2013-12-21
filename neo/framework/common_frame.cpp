@@ -32,8 +32,11 @@ If you have questions concerning this license or the applicable additional terms
 #include "Common_local.h"
 #include "../renderer/Image.h"
 #include "../renderer/ImageOpts.h"
+
+#if !NGD_STRIP_DOOMLIB
 #include "../../doomclassic/doom/doomlib.h"
 #include "../../doomclassic/doom/globaldata.h"
+#endif // !NGD_STRIP_DOOMLIB
 
 /*
 
@@ -707,6 +710,7 @@ idCommonLocal::RunDoomClassicFrame
 =================
 */
 void idCommonLocal::RunDoomClassicFrame() {
+#if !NGD_STRIP_DOOMLIB
 	static int doomTics = 0;
 
 	if( DoomLib::expansionDirty ) {
@@ -745,4 +749,5 @@ void idCommonLocal::RunDoomClassicFrame() {
 
 	renderSystem->UploadImage( "_doomClassic", doomClassicImageData.Ptr(), DOOMCLASSIC_RENDERWIDTH, DOOMCLASSIC_RENDERHEIGHT );
 	doomTics++;
+#endif //!NGD_STRIP_DOOMLIB
 }

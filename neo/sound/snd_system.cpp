@@ -342,6 +342,8 @@ void idSoundSystemLocal::StopAllSounds() {
 	hardware.Update();
 }
 
+
+#if NGD_USE_XAUDIO2
 /*
 ========================
 idSoundSystemLocal::GetIXAudio2
@@ -350,6 +352,8 @@ idSoundSystemLocal::GetIXAudio2
 void * idSoundSystemLocal::GetIXAudio2() const {
 	return (void *)hardware.GetIXAudio2();
 }
+
+#endif // NGD_USE_XAUDIO2
 
 /*
 ========================

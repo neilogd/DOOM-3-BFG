@@ -16,12 +16,6 @@
     <Filter Include="Sys">
       <UniqueIdentifier>{8672dd57-2df1-454a-be5e-1ea2d6647cef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sys\RC">
-      <UniqueIdentifier>{c4397186-0c42-4057-82b4-17dea14c173f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sys\RC\res">
-      <UniqueIdentifier>{900f9550-2a58-4b22-82a9-298f01f6ac51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Ui">
       <UniqueIdentifier>{b3166d25-0562-49da-bc8d-961006fe1785}</UniqueIdentifier>
     </Filter>
@@ -33,9 +27,6 @@
     </Filter>
     <Filter Include="Sys\Win32">
       <UniqueIdentifier>{a2d7a7d4-8b15-4874-b56b-e0ec38cef758}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sound\XAudio2">
-      <UniqueIdentifier>{0266e842-a651-4b82-bc6f-4785aed69c9f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Decls">
       <UniqueIdentifier>{7bfc05c1-c366-44d9-8667-0cbbc1efff2f}</UniqueIdentifier>
@@ -189,9 +180,6 @@
     <ClInclude Include="sys\sys_public.h">
       <Filter>Sys</Filter>
     </ClInclude>
-    <ClInclude Include="sys\win32\rc\doom_resource.h">
-      <Filter>Sys\RC</Filter>
-    </ClInclude>
     <ClInclude Include="ui\BindWindow.h">
       <Filter>Ui</Filter>
     </ClInclude>
@@ -308,15 +296,6 @@
     </ClInclude>
     <ClInclude Include="sys\sys_profile.h">
       <Filter>Sys</Filter>
-    </ClInclude>
-    <ClInclude Include="sound\XAudio2\XA2_SoundHardware.h">
-      <Filter>Sound\XAudio2</Filter>
-    </ClInclude>
-    <ClInclude Include="sound\XAudio2\XA2_SoundSample.h">
-      <Filter>Sound\XAudio2</Filter>
-    </ClInclude>
-    <ClInclude Include="sound\XAudio2\XA2_SoundVoice.h">
-      <Filter>Sound\XAudio2</Filter>
     </ClInclude>
     <ClInclude Include="sound\WaveFile.h">
       <Filter>Sound</Filter>
@@ -536,6 +515,9 @@
     </ClInclude>
     <ClInclude Include="renderer\GLMatrix.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\Dummy\snd_dummy.h">
+      <Filter>Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -829,15 +811,6 @@
     </ClCompile>
     <ClCompile Include="sys\sys_profile.cpp">
       <Filter>Sys</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\XAudio2\XA2_SoundHardware.cpp">
-      <Filter>Sound\XAudio2</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\XAudio2\XA2_SoundSample.cpp">
-      <Filter>Sound\XAudio2</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\XAudio2\XA2_SoundVoice.cpp">
-      <Filter>Sound\XAudio2</Filter>
     </ClCompile>
     <ClCompile Include="sound\WaveFile.cpp">
       <Filter>Sound</Filter>
@@ -1136,18 +1109,5 @@
     <ClCompile Include="sys\win32\win_session_local.cpp">
       <Filter>Sys\Win32</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="sys\win32\rc\res\doom.ico">
-      <Filter>Sys\RC\res</Filter>
-    </None>
-    <None Include="sys\win32\rc\res\doom3bfg.bin">
-      <Filter>Sys\RC\res</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="sys\win32\rc\doom.rc">
-      <Filter>Sys\RC</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
