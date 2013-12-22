@@ -77,8 +77,8 @@ void idImage::SubImageUpload( int mipLevel, int x, int y, int z, int width, int 
 		target = GL_TEXTURE_2D;
 		uploadTarget = GL_TEXTURE_2D;
 	} else if ( opts.textureType == TT_CUBIC ) {
-		target = GL_TEXTURE_CUBE_MAP_EXT;
-		uploadTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT + z;
+		target = GL_TEXTURE_CUBE_MAP;
+		uploadTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X + z;
 	} else {
 		assert( !"invalid opts.textureType" );
 		target = GL_TEXTURE_2D;
@@ -90,9 +90,13 @@ void idImage::SubImageUpload( int mipLevel, int x, int y, int z, int width, int 
 	if ( pixelPitch != 0 ) {
 		glPixelStorei( GL_UNPACK_ROW_LENGTH, pixelPitch );
 	}
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( opts.format == FMT_RGB565 ) {
 		glPixelStorei( GL_UNPACK_SWAP_BYTES, GL_TRUE );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 #ifdef DEBUG
 	GL_CheckErrors();
 #endif
@@ -115,9 +119,13 @@ void idImage::SubImageUpload( int mipLevel, int x, int y, int z, int width, int 
 #ifdef DEBUG
 	GL_CheckErrors();
 #endif
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( opts.format == FMT_RGB565 ) {
 		glPixelStorei( GL_UNPACK_SWAP_BYTES, GL_FALSE );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	if ( pixelPitch != 0 ) {
 		glPixelStorei( GL_UNPACK_ROW_LENGTH, 0 );
 	}
@@ -144,7 +152,7 @@ void idImage::SetTexParameters() {
 			target = GL_TEXTURE_2D;
 			break;
 		case TT_CUBIC:
-			target = GL_TEXTURE_CUBE_MAP_EXT;
+			target = GL_TEXTURE_CUBE_MAP;
 			break;
 		default:
 			idLib::FatalError( "%s: bad texture type %d", GetName(), opts.textureType );
@@ -154,6 +162,7 @@ void idImage::SetTexParameters() {
 	// ALPHA, LUMINANCE, LUMINANCE_ALPHA, and INTENSITY have been removed
 	// in OpenGL 3.2. In order to mimic those modes, we use the swizzle operators
 #if defined( USE_CORE_PROFILE )
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( opts.colorFormat == CFM_GREEN_ALPHA ) {
 		glTexParameteri( target, GL_TEXTURE_SWIZZLE_R, GL_ONE );
 		glTexParameteri( target, GL_TEXTURE_SWIZZLE_G, GL_ONE );
@@ -185,6 +194,9 @@ void idImage::SetTexParameters() {
 		glTexParameteri( target, GL_TEXTURE_SWIZZLE_B, GL_BLUE );
 		glTexParameteri( target, GL_TEXTURE_SWIZZLE_A, GL_ALPHA );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 #else
 	if ( opts.colorFormat == CFM_GREEN_ALPHA ) {
 		glTexParameteri( target, GL_TEXTURE_SWIZZLE_R, GL_ONE );
@@ -235,12 +247,17 @@ void idImage::SetTexParameters() {
 			glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1 );
 		}
 	}
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( glConfig.textureLODBiasAvailable && ( usage != TD_FONT ) ) {
 		// use a blurring LOD bias in combination with high anisotropy to fix our aliasing grate textures...
-		glTexParameterf(target, GL_TEXTURE_LOD_BIAS_EXT, r_lodBias.GetFloat() );
+		glTexParameterf(target, GL_TEXTURE_LOD_BIAS, r_lodBias.GetFloat() );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// set the wrap/clamp modes
+#if !NGD_USE_OPENGL_ES_2_0
 	switch( repeat ) {
 		case TR_REPEAT:
 			glTexParameterf( target, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -267,6 +284,9 @@ void idImage::SetTexParameters() {
 		default:
 			common->FatalError( "%s: bad texture repeat %d", GetName(), repeat );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif
 }
 
 /*
@@ -284,11 +304,13 @@ void idImage::AllocImage() {
 	PurgeImage();
 
 	switch ( opts.format ) {
+#if !NGD_USE_OPENGL_ES_2_0
 	case FMT_RGBA8:
 		internalFormat = GL_RGBA8;
 		dataFormat = GL_RGBA;
 		dataType = GL_UNSIGNED_BYTE;
 		break;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	case FMT_XRGB8:
 		internalFormat = GL_RGB;
 		dataFormat = GL_RGBA;
@@ -299,6 +321,7 @@ void idImage::AllocImage() {
 		dataFormat = GL_RGB;
 		dataType = GL_UNSIGNED_SHORT_5_6_5;
 		break;
+#if !NGD_USE_OPENGL_ES_2_0
 	case FMT_ALPHA:
 #if defined( USE_CORE_PROFILE )
 		internalFormat = GL_R8;
@@ -339,21 +362,25 @@ void idImage::AllocImage() {
 #endif
 		dataType = GL_UNSIGNED_BYTE;
 		break;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	case FMT_DXT1:
 		internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 		dataFormat = GL_RGBA;
 		dataType = GL_UNSIGNED_BYTE;
 		break;
+#if !NGD_USE_OPENGL_ES_2_0
 	case FMT_DXT5:
 		internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 		dataFormat = GL_RGBA;
 		dataType = GL_UNSIGNED_BYTE;
 		break;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	case FMT_DEPTH:
 		internalFormat = GL_DEPTH_COMPONENT;
 		dataFormat = GL_DEPTH_COMPONENT;
 		dataType = GL_UNSIGNED_BYTE;
 		break;
+#if !NGD_USE_OPENGL_ES_2_0
 	case FMT_X16:
 		internalFormat = GL_INTENSITY16;
 		dataFormat = GL_LUMINANCE;
@@ -364,6 +391,7 @@ void idImage::AllocImage() {
 		dataFormat = GL_LUMINANCE_ALPHA;
 		dataType = GL_UNSIGNED_SHORT;
 		break;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	default:
 		idLib::Error( "Unhandled image format %d in %s\n", opts.format, GetName() );
 	}
@@ -391,8 +419,8 @@ void idImage::AllocImage() {
 		target = uploadTarget = GL_TEXTURE_2D;
 		numSides = 1;
 	} else if ( opts.textureType == TT_CUBIC ) {
-		target = GL_TEXTURE_CUBE_MAP_EXT;
-		uploadTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT;
+		target = GL_TEXTURE_CUBE_MAP;
+		uploadTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 		numSides = 6;
 	} else {
 		assert( !"opts.textureType" );
@@ -440,7 +468,11 @@ void idImage::AllocImage() {
 		}
 	}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glTexParameteri( target, GL_TEXTURE_MAX_LEVEL, opts.numLevels - 1 );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// see if we messed anything up
 	GL_CheckErrors();

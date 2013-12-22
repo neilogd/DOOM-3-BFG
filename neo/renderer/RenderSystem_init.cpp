@@ -215,12 +215,14 @@ DebugCallback
 For ARB_debug_output
 ========================
 */
+#if !NGD_USE_OPENGL_ES_2_0
 static void CALLBACK DebugCallback(unsigned int source, unsigned int type,
 								   unsigned int id, unsigned int severity, int length, const char * message, void * userParam) {
 	// it probably isn't safe to do an idLib::Printf at this point
 	OutputDebugString( message );
 	OutputDebugString( "\n" );
 }
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 /*
 ==================
@@ -291,6 +293,7 @@ static void R_CheckPortableExtensions() {
 	// GL_ARB_draw_elements_base_vertex
 	glConfig.drawElementsBaseVertexAvailable = R_CheckExtension( "GL_ARB_draw_elements_base_vertex" );
 
+#if !NGD_USE_OPENGL_ES_2_0
 	// GL_ARB_vertex_program / GL_ARB_fragment_program
 	glConfig.fragmentProgramAvailable = R_CheckExtension( "GL_ARB_fragment_program" );
 	if( glConfig.fragmentProgramAvailable )	{
@@ -347,6 +350,7 @@ static void R_CheckPortableExtensions() {
 									0, NULL, true );
 		}
 	}
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// GL_ARB_multitexture
 	if ( !glConfig.multitextureAvailable ) {
@@ -389,9 +393,11 @@ static void R_CheckPortableExtensions() {
 		idLib::Error( "GL_ATI_separate_stencil not available" );
 	}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	// generate one global Vertex Array Object (VAO)
 	glGenVertexArrays( 1, &glConfig.global_vao );
 	glBindVertexArray( glConfig.global_vao );
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 }
 
@@ -559,8 +565,9 @@ void R_InitOpenGL() {
 	glConfig.extensions_string = (const char *)glGetString( GL_EXTENSIONS );
 
 	if ( glConfig.extensions_string == NULL ) {
+#if !NGD_USE_OPENGL_ES_2_0
 		// Build the extensions string
-		GLint numExtensions;
+		GLint numExtensions = 0;
 		glGetIntegerv( GL_NUM_EXTENSIONS, &numExtensions );
 		extensions_string.Clear();
 		for ( int i = 0; i < numExtensions; i++ ) {
@@ -571,6 +578,7 @@ void R_InitOpenGL() {
 			}
 		}
 		glConfig.extensions_string = extensions_string.c_str();
+#endif // !NGD_USE_OPENGL_ES_2_0
 	}
 
 
@@ -655,12 +663,14 @@ void GL_CheckErrors() {
 			case GL_INVALID_OPERATION:
 				strcpy( s, "GL_INVALID_OPERATION" );
 				break;
+#if !NGD_USE_OPENGL_ES_2_0
 			case GL_STACK_OVERFLOW:
 				strcpy( s, "GL_STACK_OVERFLOW" );
 				break;
 			case GL_STACK_UNDERFLOW:
 				strcpy( s, "GL_STACK_UNDERFLOW" );
 				break;
+#endif // !NGD_USE_OPENGL_ES_2_0
 			case GL_OUT_OF_MEMORY:
 				strcpy( s, "GL_OUT_OF_MEMORY" );
 				break;
@@ -921,9 +931,10 @@ void R_ReadTiledPixels( int width, int height, byte *buffer, renderView_t *ref =
 			if ( yo + h > height ) {
 				h = height - yo;
 			}
-
+#if !NGD_USE_OPENGL_ES_2_0
 			glReadBuffer( GL_FRONT );
 			glReadPixels( 0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, temp ); 
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 			int	row = ( w * 3 + 3 ) & ~3;		// OpenGL pads to dword boundaries
 
@@ -1421,6 +1432,7 @@ void GfxInfo_f( const idCmdArgs &args ) {
 	common->Printf( "-------\n" );
 
 	// WGL_EXT_swap_interval
+#if !NGD_USE_OPENGL_ES_2_0
 	typedef BOOL (WINAPI * PFNWGLSWAPINTERVALEXTPROC) (int interval);
 	extern	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 
@@ -1429,6 +1441,9 @@ void GfxInfo_f( const idCmdArgs &args ) {
 	} else {
 		common->Printf( "swapInterval not forced\n" );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	if ( glConfig.stereoPixelFormatAvailable && glConfig.isStereoPixelFormat ) {
 		idLib::Printf( "OpenGl quad buffer stereo pixel format active\n" );

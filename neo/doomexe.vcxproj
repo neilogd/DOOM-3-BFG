@@ -514,6 +514,12 @@
     <ClCompile Include="ui\Winvar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\external\angleproject\src\libEGL\libEGL.vcxproj">
+      <Project>{e746fca9-64c3-433e-85e8-9a5a67ab7ed6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\external\angleproject\src\libGLESv2\libGLESv2.vcxproj">
+      <Project>{b5871a7a-968c-42e3-a33b-981e6f448e78}</Project>
+    </ProjectReference>
     <ProjectReference Include="external.vcxproj">
       <Project>{b679fda2-cb76-4348-906b-4caa294195fd}</Project>
     </ProjectReference>

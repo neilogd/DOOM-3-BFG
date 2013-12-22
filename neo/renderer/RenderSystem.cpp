@@ -113,6 +113,7 @@ void idRenderSystemLocal::RenderCommandBuffers( const emptyCommand_t * const cmd
 
 	// r_skipRender is usually more usefull, because it will still
 	// draw 2D graphics
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( !r_skipBackEnd.GetBool() ) {
 		if ( glConfig.timerQueryAvailable ) {
 			if ( tr.timerQueryId == 0 ) {
@@ -126,6 +127,9 @@ void idRenderSystemLocal::RenderCommandBuffers( const emptyCommand_t * const cmd
 			RB_ExecuteBackEndCommands( cmdHead );
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// pass in null for now - we may need to do some map specific hackery in the future
 	resolutionScale.InitForMap( NULL );
@@ -233,6 +237,7 @@ static void R_CheckCvars() {
 		}
 	}
 
+#if !NGD_USE_OPENGL_ES_2_0
 	extern idCVar r_useSeamlessCubeMap;
 	if ( r_useSeamlessCubeMap.IsModified() ) {
 		r_useSeamlessCubeMap.ClearModified();
@@ -244,7 +249,11 @@ static void R_CheckCvars() {
 			}
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
+#if !NGD_USE_OPENGL_ES_2_0
 	extern idCVar r_useSRGB;
 	if ( r_useSRGB.IsModified() ) {
 		r_useSRGB.ClearModified();
@@ -256,8 +265,11 @@ static void R_CheckCvars() {
 			}
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
-
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( r_multiSamples.IsModified() ) {
 		if ( r_multiSamples.GetInteger() > 0 ) {
 			glEnable( GL_MULTISAMPLE );
@@ -265,6 +277,9 @@ static void R_CheckCvars() {
 			glDisable( GL_MULTISAMPLE );
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// check for changes to logging state
 	GLimp_EnableLogging( r_logFile.GetInteger() != 0 );
@@ -650,6 +665,7 @@ void idRenderSystemLocal::SwapCommandBuffers_FinishRendering(
 	}
 
 	// read back the start and end timer queries from the previous frame
+#if !NGD_USE_OPENGL_ES_2_0
 	if ( glConfig.timerQueryAvailable ) {
 		uint64 drawingTimeNanoseconds = 0;
 		if ( tr.timerQueryId != 0 ) {
@@ -659,6 +675,9 @@ void idRenderSystemLocal::SwapCommandBuffers_FinishRendering(
 			*gpuMicroSec = drawingTimeNanoseconds / 1000;
 		}
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	//------------------------------
 
@@ -944,7 +963,11 @@ void idRenderSystemLocal::CaptureRenderToFile( const char *fileName, bool fixAlp
 	guiModel->Clear();
 	RenderCommandBuffers( frameData->cmdHead );
 
+#if !NGD_USE_OPENGL_ES_2_0
 	glReadBuffer( GL_BACK );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// include extra space for OpenGL padding to word boundaries
 	int	c = ( rc.GetWidth() + 3 ) * rc.GetHeight();

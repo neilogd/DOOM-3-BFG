@@ -1020,6 +1020,7 @@ Debugging tool, won't work correctly with SMP or when mirrors are present
 =====================
 */
 void idRenderWorldLocal::ShowPortals() {
+#if !NGD_USE_OPENGL_ES_2_0
 	int			i, j;
 	portalArea_t	*area;
 	portal_t	*p;
@@ -1052,4 +1053,7 @@ void idRenderWorldLocal::ShowPortals() {
 			glEnd();
 		}
 	}
+#else
+			NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }

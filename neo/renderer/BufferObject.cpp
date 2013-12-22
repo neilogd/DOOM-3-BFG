@@ -307,6 +307,7 @@ void * idVertexBuffer::MapBuffer( bufferMapType_t mapType ) const {
 	assert( IsMapped() == false );
 
 	void * buffer = NULL;
+#if !NGD_USE_OPENGL_ES_2_0
 
 	GLuint bufferObject = reinterpret_cast< GLuint >( apiObject );
 	glBindBuffer( GL_ARRAY_BUFFER, bufferObject );
@@ -332,6 +333,9 @@ void * idVertexBuffer::MapBuffer( bufferMapType_t mapType ) const {
 	if ( buffer == NULL ) {
 		idLib::FatalError( "idVertexBuffer::MapBuffer: failed" );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	return buffer;
 }
 
@@ -343,12 +347,16 @@ idVertexBuffer::UnmapBuffer
 void idVertexBuffer::UnmapBuffer() const {
 	assert( apiObject != NULL );
 	assert( IsMapped() );
+#if !NGD_USE_OPENGL_ES_2_0
 
 	GLuint bufferObject = reinterpret_cast< GLuint >( apiObject );
 	glBindBuffer( GL_ARRAY_BUFFER, bufferObject );
 	if ( !glUnmapBuffer( GL_ARRAY_BUFFER ) ) {
 		idLib::Printf( "idVertexBuffer::UnmapBuffer failed\n" );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	SetUnmapped();
 }
@@ -554,7 +562,7 @@ void * idIndexBuffer::MapBuffer( bufferMapType_t mapType ) const {
 	assert( IsMapped() == false );
 
 	void * buffer = NULL;
-
+#if !NGD_USE_OPENGL_ES_2_0
 	GLuint bufferObject = reinterpret_cast< GLuint >( apiObject );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, bufferObject );
 	if ( mapType == BM_READ ) {
@@ -579,6 +587,9 @@ void * idIndexBuffer::MapBuffer( bufferMapType_t mapType ) const {
 	if ( buffer == NULL ) {
 		idLib::FatalError( "idIndexBuffer::MapBuffer: failed" );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	return buffer;
 }
 
@@ -590,7 +601,7 @@ idIndexBuffer::UnmapBuffer
 void idIndexBuffer::UnmapBuffer() const {
 	assert( apiObject != NULL );
 	assert( IsMapped() );
-
+#if !NGD_USE_OPENGL_ES_2_0
 	GLuint bufferObject = reinterpret_cast< GLuint >( apiObject );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, bufferObject );
 	if ( !glUnmapBuffer( GL_ELEMENT_ARRAY_BUFFER ) ) {
@@ -598,6 +609,7 @@ void idIndexBuffer::UnmapBuffer() const {
 	}
 
 	SetUnmapped();
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -657,6 +669,7 @@ bool idJointBuffer::AllocBufferObject( const float * joints, int numAllocJoints 
 
 	bool allocationFailed = false;
 
+#if !NGD_USE_OPENGL_ES_2_0
 	const int numBytes = GetAllocedSize();
 
 	GLuint buffer = 0;
@@ -665,6 +678,9 @@ bool idJointBuffer::AllocBufferObject( const float * joints, int numAllocJoints 
 	glBufferData( GL_UNIFORM_BUFFER, numBytes, NULL, GL_STREAM_DRAW );
 	glBindBuffer( GL_UNIFORM_BUFFER, 0);
 	apiObject = reinterpret_cast< void * >( buffer );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	if ( r_showBuffers.GetBool() ) {
 		idLib::Printf( "joint buffer alloc %p, api %p (%i joints)\n", this, GetAPIObject(), GetNumJoints() );
@@ -703,7 +719,11 @@ void idJointBuffer::FreeBufferObject() {
 	}
 
 	GLuint buffer = reinterpret_cast< GLuint > ( apiObject );
+#if !NGD_USE_OPENGL_ES_2_0
 	glBindBuffer( GL_UNIFORM_BUFFER, 0 );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	glDeleteBuffers( 1, & buffer );
 
 	ClearWithoutFreeing();
@@ -758,6 +778,7 @@ void idJointBuffer::Update( const float * joints, int numUpdateJoints ) const {
 	assert( IsMapped() == false );
 	assert_16_byte_aligned( joints );
 	assert( ( GetOffset() & 15 ) == 0 );
+#if !NGD_USE_OPENGL_ES_2_0
 
 	if ( numUpdateJoints > numJoints ) {
 		idLib::FatalError( "idJointBuffer::Update: size overrun, %i > %i\n", numUpdateJoints, numJoints );
@@ -767,6 +788,9 @@ void idJointBuffer::Update( const float * joints, int numUpdateJoints ) const {
 
 	glBindBuffer( GL_UNIFORM_BUFFER, reinterpret_cast< GLuint >( apiObject ) );
 	glBufferSubData( GL_UNIFORM_BUFFER, GetOffset(), (GLsizeiptr)numBytes, joints );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*
@@ -779,9 +803,9 @@ float * idJointBuffer::MapBuffer( bufferMapType_t mapType ) const {
 	assert( mapType == BM_WRITE );
 	assert( apiObject != NULL );
 
-	int numBytes = GetAllocedSize();
-
 	void * buffer = NULL;
+#if !NGD_USE_OPENGL_ES_2_0
+	int numBytes = GetAllocedSize();
 
 	glBindBuffer( GL_UNIFORM_BUFFER, reinterpret_cast< GLuint >( apiObject ) );
 	numBytes = numBytes;
@@ -797,6 +821,9 @@ float * idJointBuffer::MapBuffer( bufferMapType_t mapType ) const {
 	if ( buffer == NULL ) {
 		idLib::FatalError( "idJointBuffer::MapBuffer: failed" );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 	return (float *) buffer;
 }
 
@@ -808,13 +835,16 @@ idJointBuffer::UnmapBuffer
 void idJointBuffer::UnmapBuffer() const {
 	assert( apiObject != NULL );
 	assert( IsMapped() );
-
+#if !NGD_USE_OPENGL_ES_2_0
 	glBindBuffer( GL_UNIFORM_BUFFER, reinterpret_cast< GLuint >( apiObject ) );
 	if ( !glUnmapBuffer( GL_UNIFORM_BUFFER ) ) {
 		idLib::Printf( "idJointBuffer::UnmapBuffer failed\n" );
 	}
 
 	SetUnmapped();
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 }
 
 /*

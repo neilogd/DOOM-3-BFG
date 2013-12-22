@@ -1260,10 +1260,14 @@ void idRenderProgManager::LoadGLSLProgram( const int programIndex, const int ver
 	}
 
 	// get the uniform buffer binding for skinning joint matrices
+#if !NGD_USE_OPENGL_ES_2_0
 	GLint blockIndex = glGetUniformBlockIndex( program, "matrices_ubo" );
 	if ( blockIndex != -1 ) {
 		glUniformBlockBinding( program, blockIndex, 0 );
 	}
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 	// set the texture unit locations once for the render program. We only need to do this once since we only link the program once
 	glUseProgram( program );

@@ -493,7 +493,7 @@ static bool GLW_InitDriver( glimpParms_t parms ) {
 	}
 	common->Printf( "succeeded\n" );
 #else
-	NGD_MISSING_FUNCTIONALITY
+	NGD_MISSING_FUNCTIONALITY;
 #endif // !NGD_USE_OPENGL_ES_2_0
 	return true;
 }

@@ -176,8 +176,12 @@ void RB_DrawElementsWithCounters( const drawSurf_t *surf ) {
 		}
 		assert( ( jointBuffer.GetOffset() & ( glConfig.uniformBufferOffsetAlignment - 1 ) ) == 0 );
 
+#if !NGD_USE_OPENGL_ES_2_0
 		const GLuint ubo = reinterpret_cast< GLuint >( jointBuffer.GetAPIObject() );
 		glBindBufferRange( GL_UNIFORM_BUFFER, 0, ubo, jointBuffer.GetOffset(), jointBuffer.GetNumJoints() * sizeof( idJointMat ) );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif
 	}
 
 	renderProgManager.CommitUniforms();
@@ -202,18 +206,25 @@ void RB_DrawElementsWithCounters( const drawSurf_t *surf ) {
 		glVertexAttribPointer( PC_ATTRIB_INDEX_NORMAL, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_NORMAL_OFFSET ) );
 		glVertexAttribPointer( PC_ATTRIB_INDEX_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_COLOR_OFFSET ) );
 		glVertexAttribPointer( PC_ATTRIB_INDEX_COLOR2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_COLOR2_OFFSET ) );
+#if !NGD_USE_OPENGL_ES_2_0
 		glVertexAttribPointer( PC_ATTRIB_INDEX_ST, 2, GL_HALF_FLOAT, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_ST_OFFSET ) );
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif
 		glVertexAttribPointer( PC_ATTRIB_INDEX_TANGENT, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof( idDrawVert ), (void *)( DRAWVERT_TANGENT_OFFSET ) );
 
 		backEnd.glState.vertexLayout = LAYOUT_DRAW_VERT;
 	}
-	
+
+#if !NGD_USE_OPENGL_ES_2_0
 	glDrawElementsBaseVertex( GL_TRIANGLES, 
 							  r_singleTriangle.GetBool() ? 3 : surf->numIndexes,
 							  GL_INDEX_TYPE,
 							  (triIndex_t *)indexOffset,
 							  vertOffset / sizeof ( idDrawVert ) );
-							  
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif
 
 }
 
@@ -1478,7 +1489,9 @@ static void RB_StencilShadowPass( const drawSurf_t *drawSurfs, const viewLight_t
 			}
 			vertexBuffer = &vertexCache.frameData[vertexCache.drawListNum].vertexBuffer;
 		}
+#if !NGD_USE_OPENGL_ES_2_0
 		const int vertOffset = (int)( vbHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 		// get index buffer
 		const vertCacheHandle_t ibHandle = drawSurf->indexCache;
@@ -1493,7 +1506,9 @@ static void RB_StencilShadowPass( const drawSurf_t *drawSurfs, const viewLight_t
 			}
 			indexBuffer = &vertexCache.frameData[vertexCache.drawListNum].indexBuffer;
 		}
+#if !NGD_USE_OPENGL_ES_2_0
 		const uint64 indexOffset = (int)( ibHandle >> VERTCACHE_OFFSET_SHIFT ) & VERTCACHE_OFFSET_MASK;
+#endif
 
 		RENDERLOG_PRINTF( "Binding Buffers: %p %p\n", vertexBuffer, indexBuffer );
 
@@ -1513,8 +1528,12 @@ static void RB_StencilShadowPass( const drawSurf_t *drawSurfs, const viewLight_t
 			}
 			assert( ( jointBuffer.GetOffset() & ( glConfig.uniformBufferOffsetAlignment - 1 ) ) == 0 );
 
+#if !NGD_USE_OPENGL_ES_2_0
 			const GLuint ubo = reinterpret_cast< GLuint >( jointBuffer.GetAPIObject() );
 			glBindBufferRange( GL_UNIFORM_BUFFER, 0, ubo, jointBuffer.GetOffset(), jointBuffer.GetNumJoints() * sizeof( idJointMat ) );
+#else
+			NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 			if ( ( backEnd.glState.vertexLayout != LAYOUT_DRAW_SHADOW_VERT_SKINNED) || ( backEnd.glState.currentVertexBuffer != (GLuint)vertexBuffer->GetAPIObject() ) || !r_useStateCaching.GetBool() ) {
 				glBindBuffer( GL_ARRAY_BUFFER, (GLuint)vertexBuffer->GetAPIObject() );
@@ -1555,22 +1574,30 @@ static void RB_StencilShadowPass( const drawSurf_t *drawSurfs, const viewLight_t
 
 		renderProgManager.CommitUniforms();
 
+#if !NGD_USE_OPENGL_ES_2_0
 		if ( drawSurf->jointCache ) {
 			glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool() ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof( idShadowVertSkinned ) );
 		} else {
 			glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool() ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof( idShadowVert ) );
 		}
+#else
+		NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 
 		if ( !renderZPass && r_useStencilShadowPreload.GetBool() ) {
 			// render again with Z-pass
 			glStencilOpSeparate( GL_FRONT, GL_KEEP, GL_KEEP, GL_INCR );
 			glStencilOpSeparate( GL_BACK, GL_KEEP, GL_KEEP, GL_DECR );
 
+#if !NGD_USE_OPENGL_ES_2_0
 			if ( drawSurf->jointCache ) {
 				glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool() ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof ( idShadowVertSkinned ) );
 			} else {
 				glDrawElementsBaseVertex( GL_TRIANGLES, r_singleTriangle.GetBool() ? 3 : drawSurf->numIndexes, GL_INDEX_TYPE, (triIndex_t *)indexOffset, vertOffset / sizeof ( idShadowVert ) );
 			}
+#else
+			NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 		}
 	}
 
@@ -2507,8 +2534,12 @@ void RB_DrawViewInternal( const viewDef_t * viewDef, const int stereoEye ) {
 	GL_Cull( CT_FRONT_SIDED );
 
 #ifdef USE_CORE_PROFILE
+#if !NGD_USE_OPENGL_ES_2_0
 	// bind one global Vertex Array Object (VAO)
 	glBindVertexArray( glConfig.global_vao );
+#else
+	NGD_MISSING_FUNCTIONALITY;
+#endif // !NGD_USE_OPENGL_ES_2_0
 #endif
 
 	//------------------------------------
